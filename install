@@ -13,7 +13,7 @@ fi
 mkdir -p "$HOME/.local/bin"
 
 curl -fsSL \
-  https://raw.githubusercontent.com/uberblatt/cleandl/refs/heads/main/cleandl \
+  https://raw.githubusercontent.com/uberblatt/cleandl/cleandl \
   -o "$TARGET"
 
 chmod +x "$TARGET"
