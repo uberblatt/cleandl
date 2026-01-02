@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+
+DOWNLOADS="$HOME/Downloads"
+
+MUSIC="$HOME/Music"
+VIDEOS="$HOME/Videos"
+DOCS="$HOME/Documents"
+PICS="$HOME/Pictures"
+UNCAT="$HOME/Uncategorized"
+APP="$HOME/Executables"
+
+LOGFILE="$HOME/.sort_downloads.log"
+
+mkdir -p "$MUSIC" "$VIDEOS" "$DOCS" "$PICS" "$UNCAT" "$APP"
+
+shopt -s nullglob
+
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOGFILE"
+}
+
+log "=== Script run ==="
+
+for file in "$DOWNLOADS"/*; do
+    [ -f "$file" ] || continue
+
+    filename="$(basename "$file")"
+
+    case "${file,,}" in
+        *.mp3|*.flac|*.wav|*.ogg)
+            target="$MUSIC"
+            ;;
+        *.exe)
+            target="$APP"
+            ;;
+        *.mp4|*.mkv|*.avi|*.mov|*.webm)
+            target="$VIDEOS"
+            ;;
+        *.pdf|*.docx|*.txt|*.md)
+            target="$DOCS"
+            ;;
+        *.png|*.jpg|*.jpeg|*.gif|*.webp)
+            target="$PICS"
+            ;;
+        *)
+            target="$UNCAT"
+            ;;
+    esac
+
+    dest="$target/$filename"
+
+    if [ -e "$dest" ]; then
+        read -rp "File '$filename' exists in $target. Overwrite? [y/N]: " choice
+        case "$choice" in
+            y|Y)
+                mv -f "$file" "$dest"
+                log "Overwritten: $filename → $target/"
+                ;;
+            *)
+                log "Skipped (exists): $filename"
+                ;;
+        esac
+    else
+        mv "$file" "$target/"
+        log "Moved: $filename → $target/"
+    fi
+done
