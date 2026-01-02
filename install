@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+set -e
+
+TARGET="$HOME/.local/bin/cleandl"
+
+if [ -f "$TARGET" ]; then
+  echo "cleandl already exists at $TARGET"
+  echo "Aborting to avoid overwrite."
+  exit 1
+fi
+
+mkdir -p "$HOME/.local/bin"
+
+curl -fsSL \
+  https://raw.githubusercontent.com/uberblatt/cleandl/refs/heads/main/cleandl \
+  -o "$TARGET"
+
+chmod +x "$TARGET"
+
+echo "cleandl installed successfully"
+echo "type 'cleandl'"
