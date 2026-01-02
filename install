@@ -12,10 +12,7 @@ fi
 
 mkdir -p "$HOME/.local/bin"
 
-curl -fsSL \
-  https://raw.githubusercontent.com/uberblatt/cleandl/main/cleandl
-  \
-  -o "$TARGET"
+curl -fsSL https://raw.githubusercontent.com/uberblatt/cleandl/main/cleandl -o "$TARGET"
 
 chmod +x "$TARGET"
 
