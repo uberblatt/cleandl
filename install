@@ -1,6 +1,10 @@
 #!/usr/bin/env sh
-
 set -e
+
+command -v curl >/dev/null 2>&1 || {
+  echo "curl is required but not installed."
+  exit 1
+}
 
 TARGET="$HOME/.local/bin/cleandl"
 
@@ -12,9 +16,22 @@ fi
 
 mkdir -p "$HOME/.local/bin"
 
-curl -fsSL https://raw.githubusercontent.com/uberblatt/cleandl/main/cleandl -o "$TARGET"
+curl -fsSL \
+  https://raw.githubusercontent.com/uberblatt/cleandl/main/cleandl \
+  -o "$TARGET"
+
+head -n 1 "$TARGET" | grep -q "^#!" || {
+  echo "Downloaded file does not look like a script."
+  rm -f "$TARGET"
+  exit 1
+}
 
 chmod +x "$TARGET"
 
-echo "cleandl installed successfully"
-echo "type 'cleandl'"
+echo "cleandl installed successfully 🎉"
+
+if ! echo "$PATH" | grep -q "$HOME/.local/bin"; then
+  echo "Note: ~/.local/bin is not in your PATH."
+fi
+
+echo "Run: cleandl"
